@@ -24,7 +24,7 @@ const buildTree = (data: ResponseBody): DataItem => {
     id: "-1",
     type: "folder",
     parent: null,
-    name: "root",
+    name: "Root",
     items: [],
   };
   const idMapping = data.reduce((acc, el, i) => {

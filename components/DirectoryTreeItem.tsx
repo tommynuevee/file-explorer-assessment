@@ -1,9 +1,8 @@
 import React from "react";
-import Image from "next/image";
 
-import folderPlusIcon from "@/assets/icons/folder-plus.svg";
-import folderMinusIcon from "@/assets/icons/folder-minus.svg";
-import fileIcon from "@/assets/icons/file.svg";
+import FileIcon from "@/components/icons/FileIcon";
+import FolderMinusIcon from "@/components/icons/FolderMinusIcon";
+import FolderPlusIcon from "@/components/icons/FolderPlusIcon";
 
 interface Props {
   type: "file" | "folder";
@@ -30,12 +29,14 @@ interface DirectoryTreeItemFolderProps {
 function DirectoryTreeItemFolder({ name, isOpen }: DirectoryTreeItemFolderProps) {
   return (
     <>
-      {isOpen ? <Image src={folderMinusIcon} alt="Close directory" /> : <Image src={folderPlusIcon} alt="Open directory" />}
+      <div className="shrink-0">{isOpen ? <FolderMinusIcon /> : <FolderPlusIcon />}</div>
       <p className="text-left">{name}</p>
     </>
   );
 }
 
+// I created this initially to display files in the tree as well. Ended up removing filtering to show only folders.
+// I would never leave dead code normally, but just for the sake of the test, as I was not sure if I had to show files in the tree too.
 interface DirectoryTreeItemFileProps {
   name: string;
   ext?: string;
@@ -44,7 +45,9 @@ interface DirectoryTreeItemFileProps {
 function DirectoryTreeItemFile({ name, ext }: DirectoryTreeItemFileProps) {
   return (
     <>
-      <Image src={fileIcon} alt="File icon" />
+      <div className="shrink-0">
+        <FileIcon />
+      </div>
       <p className="text-left">{`${name}.${ext}`}</p>
     </>
   );

@@ -1,5 +1,5 @@
 import type { DataItem } from "@/pages/api/file-tree";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import DirectoryTreeItem from "./DirectoryTreeItem";
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
 }
 
 const DirectoryTree = ({ file }: Props) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleFileClick = () => {
     setIsOpen(!isOpen);
@@ -19,11 +19,13 @@ const DirectoryTree = ({ file }: Props) => {
         <DirectoryTreeItem type={file.type} ext={file.ext} name={file.name} isOpen={isOpen} />
       </button>
       {isOpen &&
-        file.items.map((item) => (
-          <ul className="ml-4" key={item.id}>
-            <DirectoryTree file={item} />
-          </ul>
-        ))}
+        file.items
+          .filter((item) => item.type === "folder")
+          .map((item) => (
+            <ul className="pl-6" key={item.id}>
+              <DirectoryTree file={item} />
+            </ul>
+          ))}
     </li>
   );
 };
