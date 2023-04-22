@@ -1,14 +1,15 @@
-import type { DataItem } from "@/pages/api/file-tree";
 import { useQuery } from "@tanstack/react-query";
+import type { ResponseBody } from "@/pages/api/directories";
 
 export default function useFileTree() {
-  const { data, isError, isLoading } = useQuery({ queryKey: ["fileTree"], queryFn: getFileTree, refetchInterval: 30000 });
+  const { data, isError, isLoading, isSuccess } = useQuery({ queryKey: ["fileTree"], queryFn: getFileTree, refetchInterval: 30000 });
 
-  return { data, isError, isLoading };
+  return { data, isError, isLoading, isSuccess };
 }
 
-async function getFileTree(): Promise<DataItem> {
-  const response = await fetch("/api/file-tree");
+const getFileTree = async (): Promise<ResponseBody> => {
+  const response = await fetch("/api/directories");
   if (!response.ok) throw new Error("Something went wrong with the request");
-  return response.json();
-}
+  const jsonResponse = (await response.json()) as ResponseBody;
+  return jsonResponse?.map((dataItem) => (dataItem.parent === null ? { ...dataItem, parent: "-1" } : dataItem));
+};

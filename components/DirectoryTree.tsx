@@ -1,29 +1,40 @@
-import type { DataItem } from "@/pages/api/file-tree";
-import { useState, useContext } from "react";
+import { useState } from "react";
+
+import { TreeItem } from "@/utils";
 import DirectoryTreeItem from "./DirectoryTreeItem";
+import { useDirectoryContext } from "./state/DirectoryContextProvider";
 
 interface Props {
-  file: DataItem;
+  dataItem: TreeItem;
 }
 
-const DirectoryTree = ({ file }: Props) => {
+const DirectoryTree = ({ dataItem }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { selectedDir, setSelectedDir } = useDirectoryContext();
 
-  const handleFileClick = () => {
+  const handleIconClick = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleNameClick = () => {
+    setSelectedDir(dataItem);
   };
 
   return (
     <li>
-      <button onClick={handleFileClick}>
-        <DirectoryTreeItem type={file.type} ext={file.ext} name={file.name} isOpen={isOpen} />
-      </button>
+      <DirectoryTreeItem
+        name={dataItem.name}
+        isOpen={isOpen}
+        onIconClick={handleIconClick}
+        onNameClick={handleNameClick}
+        isSelected={selectedDir?.id === dataItem.id}
+      />
       {isOpen &&
-        file.items
+        dataItem.items
           .filter((item) => item.type === "folder")
           .map((item) => (
             <ul className="pl-6" key={item.id}>
-              <DirectoryTree file={item} />
+              <DirectoryTree dataItem={item} />
             </ul>
           ))}
     </li>
