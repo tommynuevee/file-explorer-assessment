@@ -7,7 +7,7 @@ export default function Home() {
   const { isLoading, isError, isSuccess } = useFileTree();
 
   return (
-    <main className="p-2 dark:text-white max-w-5xl mx-auto md:mt-8">
+    <main className="p-4 dark:text-white max-w-5xl mx-auto md:mt-8">
       <div className="mb-4">
         <h1 className="text-4xl">File Explorer</h1>
       </div>
@@ -17,7 +17,7 @@ export default function Home() {
           {isError && <p>Oops! something went wrong.</p>}
           {isSuccess && (
             <div className="flex gap-8">
-              <div className="w-72 shrink-0">
+              <div className="w-72 shrink-0 hidden md:block">
                 <DirectoryTreeView />
               </div>
               <div className="max-w-xl">

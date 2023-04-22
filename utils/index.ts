@@ -4,23 +4,17 @@ export interface TreeItem extends DirItem {
   items: TreeItem[];
 }
 
-export const buildTree = (data?: ResponseBody): TreeItem => {
-  let root: TreeItem = {
-    id: "-1",
-    type: "folder",
-    parent: null,
-    name: "Root",
-    items: [],
-  };
-  if (!data) return root;
+export const buildTree = (data: ResponseBody): TreeItem => {
   const idMapping = data.reduce((acc, el, i) => {
     acc[el.id] = i;
     return acc;
   }, {} as { [key: string]: number });
 
   const treeData = data.map<TreeItem>((el) => ({ ...el, items: [] }));
+  const root = treeData[idMapping["-1"]];
 
   treeData.forEach((el) => {
+    if (el.id === "-1") return;
     if (el.parent === "-1" || el.parent === null) {
       root.items.push(el);
       return;

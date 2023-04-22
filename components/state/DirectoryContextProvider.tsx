@@ -9,25 +9,36 @@ import useFileTree from "@/components/queries/useFileTree";
 const DirectoryContext = createContext<{
   selectedDir: DirItem | null;
   setSelectedDir: Dispatch<SetStateAction<DirItem | null>>;
-  dataTree?: TreeItem;
+  dataTree: TreeItem | null;
   selectedDirContent: DirItem[];
+  goBack: () => void;
 }>({
   selectedDir: null,
   setSelectedDir: () => null,
-  dataTree: undefined,
+  dataTree: null,
   selectedDirContent: [],
+  goBack: () => null,
 });
 
 const DirectoryContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [selectedDir, setSelectedDir] = useState<DirItem | null>(null);
   const { data } = useFileTree();
 
-  const dataTree = useMemo(() => buildTree(data), [data]);
+  const dataTree = useMemo(() => (data ? buildTree(data) : null), [data]);
 
   const selectedDirContent = !data || !selectedDir ? [] : data.filter((dir) => dir.parent === selectedDir.id);
 
+  const goBack = () => {
+    if (selectedDir?.parent) {
+      const prevDir = data?.find((dir) => dir.id === selectedDir.parent);
+      if (prevDir) setSelectedDir(prevDir);
+    }
+  };
+
   return (
-    <DirectoryContext.Provider value={{ dataTree, selectedDir, setSelectedDir, selectedDirContent }}>{children}</DirectoryContext.Provider>
+    <DirectoryContext.Provider value={{ dataTree, selectedDir, setSelectedDir, selectedDirContent, goBack }}>
+      {children}
+    </DirectoryContext.Provider>
   );
 };
 
