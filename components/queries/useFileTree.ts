@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import type { DirItem, ResponseBody } from "@/pages/api/directories";
 
+const refetchInterval = 30000;
+
 export default function useFileTree() {
-  const { data, isError, isLoading, isSuccess } = useQuery({ queryKey: ["fileTree"], queryFn: getFileTree, refetchInterval: 30000 });
+  const { data, isError, isLoading, isSuccess } = useQuery({ queryKey: ["fileTree"], queryFn: getFileTree, refetchInterval });
 
   return { data, isError, isLoading, isSuccess };
 }

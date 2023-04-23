@@ -12,12 +12,16 @@ const DirectoryContext = createContext<{
   dataTree: TreeItem | null;
   selectedDirContent: DirItem[];
   goBack: () => void;
+  currDirExists: boolean;
+  goToRoot: () => void;
 }>({
   selectedDir: null,
   setSelectedDir: () => null,
   dataTree: null,
   selectedDirContent: [],
   goBack: () => null,
+  currDirExists: true,
+  goToRoot: () => null,
 });
 
 const DirectoryContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -25,6 +29,7 @@ const DirectoryContextProvider: FC<{ children: ReactNode }> = ({ children }) => 
   const { data } = useFileTree();
 
   const dataTree = useMemo(() => (data ? buildTree(data) : null), [data]);
+  const currDirExists = data?.some((dir) => dir.id === selectedDir?.id) ?? false;
 
   const selectedDirContent = !data || !selectedDir ? [] : data.filter((dir) => dir.parent === selectedDir.id);
 
@@ -35,8 +40,13 @@ const DirectoryContextProvider: FC<{ children: ReactNode }> = ({ children }) => 
     }
   };
 
+  const goToRoot = () => {
+    const root = data?.find((dir) => dir.id === "-1") ?? null;
+    setSelectedDir(root);
+  };
+
   return (
-    <DirectoryContext.Provider value={{ dataTree, selectedDir, setSelectedDir, selectedDirContent, goBack }}>
+    <DirectoryContext.Provider value={{ dataTree, selectedDir, setSelectedDir, selectedDirContent, goBack, currDirExists, goToRoot }}>
       {children}
     </DirectoryContext.Provider>
   );

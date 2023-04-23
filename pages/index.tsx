@@ -1,3 +1,4 @@
+import AlertMessage from "@/components/AlertMessage";
 import DirectoryListView from "@/components/DirectoryListView";
 import DirectoryTreeView from "@/components/DirectoryTreeView";
 import useFileTree from "@/components/queries/useFileTree";
@@ -16,14 +17,17 @@ export default function Home() {
           {isLoading && <p>Loading files...</p>}
           {isError && <p>Oops! something went wrong.</p>}
           {isSuccess && (
-            <div className="flex gap-8">
-              <div className="w-72 shrink-0 hidden md:block">
-                <DirectoryTreeView />
+            <>
+              <AlertMessage />
+              <div className="flex gap-8">
+                <div className="w-72 shrink-0 hidden md:block">
+                  <DirectoryTreeView />
+                </div>
+                <div className="max-w-xl">
+                  <DirectoryListView />
+                </div>
               </div>
-              <div className="max-w-xl">
-                <DirectoryListView />
-              </div>
-            </div>
+            </>
           )}
         </DirectoryContextProvider>
       </>
