@@ -1,3 +1,36 @@
+import AlertMessage from "@/components/AlertMessage";
+import DirectoryListView from "@/components/DirectoryListView";
+import DirectoryTreeView from "@/components/DirectoryTreeView";
+import useFileTree from "@/components/queries/useFileTree";
+import DirectoryContextProvider from "@/components/state/DirectoryContextProvider";
+
 export default function Home() {
-  return <main className="p-2">Hello world</main>;
+  const { isLoading, isError, isSuccess } = useFileTree();
+
+  return (
+    <main className="p-4 dark:text-white max-w-5xl mx-auto md:mt-8">
+      <div className="mb-4">
+        <h1 className="text-4xl">File Explorer</h1>
+      </div>
+      <>
+        <DirectoryContextProvider>
+          {isLoading && <p>Loading files...</p>}
+          {isError && <p>Oops! something went wrong.</p>}
+          {isSuccess && (
+            <>
+              <AlertMessage />
+              <div className="flex gap-8">
+                <div className="w-72 shrink-0 hidden md:block">
+                  <DirectoryTreeView />
+                </div>
+                <div className="max-w-xl">
+                  <DirectoryListView />
+                </div>
+              </div>
+            </>
+          )}
+        </DirectoryContextProvider>
+      </>
+    </main>
+  );
 }
