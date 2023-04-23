@@ -29,7 +29,7 @@ const DirectoryContextProvider: FC<{ children: ReactNode }> = ({ children }) => 
   const { data } = useFileTree();
 
   const dataTree = useMemo(() => (data ? buildTree(data) : null), [data]);
-  const currDirExists = data?.some((dir) => dir.id === selectedDir?.id) ?? false;
+  const currDirExists = (data?.some((dir) => dir.id === selectedDir?.id) || selectedDir === null) ?? false;
 
   const selectedDirContent = !data || !selectedDir ? [] : data.filter((dir) => dir.parent === selectedDir.id);
 
